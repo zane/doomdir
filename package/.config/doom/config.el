@@ -53,3 +53,8 @@
 ;; they are implemented.
 (use-package! gruvbox-theme
   :config (setq doom-theme 'gruvbox-dark-medium))
+
+(use-package! evil-lisp-state
+  :demand t
+  :init (setq evil-lisp-state-global t)
+  :config (evil-lisp-state-leader "SPC k"))
