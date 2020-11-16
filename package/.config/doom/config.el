@@ -57,4 +57,5 @@
 (use-package! evil-lisp-state
   :demand t
   :init (setq evil-lisp-state-global t)
+  :custom (evil-lisp-state-cursor 'hollow)
   :config (evil-lisp-state-leader "SPC k"))
