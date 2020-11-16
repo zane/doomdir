@@ -35,7 +35,6 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -56,3 +55,7 @@
   :config (setq doom-theme 'gruvbox-dark-medium))
 
 (toggle-frame-maximized)
+(use-package! evil-cleverparens
+  :config
+  (add-hook! 'lisp-mode-hook #'evil-cleverparens-mode)
+  (add-hook! 'clojure-mode-hook #'evil-cleverparens-mode))
