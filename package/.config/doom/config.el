@@ -56,5 +56,5 @@
 
 (use-package! evil-cleverparens
   :config
-  (add-hook! 'lisp-mode-hook #'evil-cleverparens-mode)
+  (add-hook! 'lisp-mode-hook    #'evil-cleverparens-mode)
   (add-hook! 'clojure-mode-hook #'evil-cleverparens-mode))
