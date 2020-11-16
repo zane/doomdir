@@ -54,7 +54,6 @@
 (use-package! gruvbox-theme
   :config (setq doom-theme 'gruvbox-dark-medium))
 
-(toggle-frame-maximized)
 (use-package! evil-cleverparens
   :config
   (add-hook! 'lisp-mode-hook #'evil-cleverparens-mode)
