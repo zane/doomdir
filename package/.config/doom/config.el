@@ -51,6 +51,9 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+(use-package! evil
+  :config (setq evil-move-beyond-eol t))
+
 (use-package! gruvbox-theme
   :config (setq doom-theme 'gruvbox-dark-medium))
 
