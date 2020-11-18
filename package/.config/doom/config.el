@@ -63,6 +63,10 @@
 (after! evil
   (setq evil-move-beyond-eol t))
 
+(after! projectile
+  (projectile-add-known-project "~/.dotfiles")
+  (setq projectile-project-search-path '("~/projects")))
+
 ;;; Appearance
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
