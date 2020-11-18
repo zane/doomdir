@@ -71,12 +71,12 @@
          (dune-mode . lispyville-mode)
          (clojure-mode . lispyville-mode))
   :init (setq lispyville-key-theme
-              '((operators normal)
-                commentary
+              '((atom-movement normal visual)
                 c-u
                 c-w
+                commentary
+                (operators normal)
                 (prettify insert)
-                (atom-movement normal visual)
                 text-objects))
   :config (lispyville-set-key-theme))
 
