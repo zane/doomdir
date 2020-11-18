@@ -74,7 +74,7 @@
 (defvar +theme-dark 'gruvbox-dark-medium)
 
 (defvar +default-sunrise-hour 5)
-(defvar +default-sunset-hour 16)
+(defvar +default-sunset-hour 17)
 
 (defvar +latitude 40.7)
 (defvar +longitude -73.9)
