@@ -65,8 +65,6 @@
 
 (after! projectile
   (setq projectile-project-search-path '("~/projects"))
-  (unless projectile-known-projects
-    (projectile-discover-projects-in-directory))
   (projectile-add-known-project "~/.dotfiles"))
 
 ;;; Appearance
