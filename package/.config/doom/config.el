@@ -57,7 +57,7 @@
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 (after! newcomment
-  (comment-style 'plain))
+  (setq comment-style 'plain))
 
 (use-package! evil
   :config (setq evil-move-beyond-eol t))
