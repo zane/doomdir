@@ -50,9 +50,14 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+;;; Basic
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-(setq comment-style 'plain)
+(after! newcomment
+  (comment-style 'plain))
 
 (use-package! evil
   :config (setq evil-move-beyond-eol t))
@@ -85,6 +90,15 @@
                            (:sunrise . gruvbox-light-medium)))
   (circadian-setup))
 
+;;; Lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package! evil-lisp-state
+  :demand t
+  :init (setq evil-lisp-state-global t)
+  :custom (evil-lisp-state-cursor 'hollow)
+  :config (evil-lisp-state-leader "SPC k"))
+
 (use-package! lispyville
   :when (featurep! :editor evil)
   :hook ((lisp-mode . lispyville-mode)
@@ -104,9 +118,3 @@
                 (prettify insert)
                 text-objects))
   :config (lispyville-set-key-theme))
-
-(use-package! evil-lisp-state
-  :demand t
-  :init (setq evil-lisp-state-global t)
-  :custom (evil-lisp-state-cursor 'hollow)
-  :config (evil-lisp-state-leader "SPC k"))
