@@ -113,7 +113,7 @@
 
 (use-package! lispyville
   :when (featurep! :editor evil)
-  :hook (lispy-mdoe . lispyville-mode)
+  :hook (lispy-mode . lispyville-mode)
   :init (setq lispyville-key-theme
               '((atom-movement normal visual)
                 c-u
