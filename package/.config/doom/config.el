@@ -52,6 +52,8 @@
 ;; they are implemented.
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
+(setq comment-style 'plain)
+
 (use-package! evil
   :config (setq evil-move-beyond-eol t))
 
