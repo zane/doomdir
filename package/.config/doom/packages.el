@@ -7,8 +7,9 @@
 
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
-(package! gruvbox-theme)
 (package! evil-lisp-state)
+(package! gruvbox-theme)
+(package! lispyville)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
