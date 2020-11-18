@@ -10,6 +10,7 @@
 (package! circadian)
 (package! evil-lisp-state)
 (package! gruvbox-theme)
+(package! lispy)
 (package! lispyville)
 
 ;; To install a package directly from a remote git repo, you must specify a

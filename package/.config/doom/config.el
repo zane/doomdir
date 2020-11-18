@@ -99,16 +99,20 @@
   :custom (evil-lisp-state-cursor 'hollow)
   :config (evil-lisp-state-leader "SPC k"))
 
+(use-package! lispy
+  :hook ((lisp-mode . lispy-mode)
+         (emacs-lisp-mode . lispy-mode)
+         (scheme-mode . lispy-mode)
+         (racket-mode . lispy-mode)
+         (hy-mode . lispy-mode)
+         (lfe-mode . lispy-mode)
+         (dune-mode . lispy-mode)
+         (clojure-mode . lispy-mode))
+  :config (lispy-set-key-theme '(evilcp)))
+
 (use-package! lispyville
   :when (featurep! :editor evil)
-  :hook ((lisp-mode . lispyville-mode)
-         (emacs-lisp-mode . lispyville-mode)
-         (scheme-mode . lispyville-mode)
-         (racket-mode . lispyville-mode)
-         (hy-mode . lispyville-mode)
-         (lfe-mode . lispyville-mode)
-         (dune-mode . lispyville-mode)
-         (clojure-mode . lispyville-mode))
+  :hook (lispy-mdoe . lispyville-mode)
   :init (setq lispyville-key-theme
               '((atom-movement normal visual)
                 c-u
