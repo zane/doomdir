@@ -60,8 +60,8 @@
 (after! newcomment
   (setq comment-style 'plain))
 
-(use-package! evil
-  :config (setq evil-move-beyond-eol t))
+(after! evil
+  (setq evil-move-beyond-eol t))
 
 ;;; Appearance
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
