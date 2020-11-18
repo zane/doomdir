@@ -50,6 +50,8 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 (use-package! evil
   :config (setq evil-move-beyond-eol t))
 
