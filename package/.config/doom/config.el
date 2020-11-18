@@ -56,11 +56,25 @@
 (use-package! gruvbox-theme
   :config (setq doom-theme 'gruvbox-dark-medium))
 
-;; https://github.com/abo-abo/lispy/issues/83
-;; (use-package! lispy
-;;   :config
-;;   (define-key lispy-mode-map-lispy "[" 'lispy-brackets)
-;;   (define-key lispy-mode-map-lispy "]" 'lispy-right-nostring))
+(use-package! lispyville
+  :when (featurep! :editor evil)
+  :hook ((lisp-mode . lispyville-mode)
+         (emacs-lisp-mode . lispyville-mode)
+         (scheme-mode . lispyville-mode)
+         (racket-mode . lispyville-mode)
+         (hy-mode . lispyville-mode)
+         (lfe-mode . lispyville-mode)
+         (dune-mode . lispyville-mode)
+         (clojure-mode . lispyville-mode))
+  :init (setq lispyville-key-theme
+              '((operators normal)
+                commentary
+                c-u
+                c-w
+                (prettify insert)
+                (atom-movement normal visual)
+                text-objects))
+  :config (lispyville-set-key-theme))
 
 (use-package! evil-lisp-state
   :demand t
