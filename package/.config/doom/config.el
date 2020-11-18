@@ -57,8 +57,33 @@
 (use-package! evil
   :config (setq evil-move-beyond-eol t))
 
+;;; Appearance
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar +theme-light 'gruvbox-light-medium)
+(defvar +theme-dark 'gruvbox-dark-medium)
+
+(defvar +default-sunrise-hour 5)
+(defvar +default-sunset-hour 4)
+
+(defvar +latitude 40.7)
+(defvar +longitude -73.9)
+
 (use-package! gruvbox-theme
-  :config (setq doom-theme 'gruvbox-dark-medium))
+  :if window-system
+  :config
+  (let* ((hour (decoded-time-hour (decode-time (current-time))))
+         (theme (if (< +default-sunrise-hour hour +default-sunset-hour)
+                    +theme-light
+                  +theme-dark)))
+    (load-theme theme t)))
+
+(after! (circadian gruvbox-theme)
+  (setq calendar-latitude +latitude)
+  (setq calendar-longitude +longitude)
+  (setq circadian-themes '((:sunset  . gruvbox-dark-medium)
+                           (:sunrise . gruvbox-light-medium)))
+  (circadian-setup))
 
 (use-package! lispyville
   :when (featurep! :editor evil)
