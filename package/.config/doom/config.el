@@ -64,8 +64,10 @@
   (setq evil-move-beyond-eol t))
 
 (after! projectile
-  (projectile-add-known-project "~/.dotfiles")
-  (setq projectile-project-search-path '("~/projects")))
+  (setq projectile-project-search-path '("~/projects"))
+  (unless projectile-known-projects
+    (projectile-discover-projects-in-directory))
+  (projectile-add-known-project "~/.dotfiles"))
 
 ;;; Appearance
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
