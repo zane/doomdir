@@ -98,6 +98,9 @@
 ;;; Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package! clojure
+  :mode ("\\.bb\\'" . clojure-mode))
+
 (use-package! evil-lisp-state
   :demand t
   :custom (evil-lisp-state-cursor 'hollow)
