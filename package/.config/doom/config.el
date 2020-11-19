@@ -113,17 +113,23 @@
          (lfe-mode . lispy-mode)
          (dune-mode . lispy-mode)
          (clojure-mode . lispy-mode))
-  :config (lispy-set-key-theme '(evilcp)))
+  :config
+  (lispy-set-key-theme '(evilcp))
+  (define-key lispy-mode-map (kbd "y") nil)
+  (define-key lispy-mode-map (kbd "[") 'lispy-brackets)
+  (define-key lispy-mode-map (kbd "]") 'lispy-right))
 
 (use-package! lispyville
   :when (featurep! :editor evil)
   :hook (lispy-mode . lispyville-mode)
-  :init (setq lispyville-key-theme
-              '((atom-movement normal visual)
-                c-u
-                c-w
-                commentary
-                (operators normal)
-                (prettify insert)
-                text-objects))
-  :config (lispyville-set-key-theme))
+  :init
+  (setq lispyville-key-theme
+        '((atom-movement normal visual)
+          c-u
+          c-w
+          commentary
+          (operators normal)
+          (prettify insert)
+          text-objects))
+  :config
+  (lispyville-set-key-theme))
