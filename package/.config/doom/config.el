@@ -100,9 +100,11 @@
 
 (use-package! evil-lisp-state
   :demand t
-  :init (setq evil-lisp-state-global t)
   :custom (evil-lisp-state-cursor 'hollow)
-  :config (evil-lisp-state-leader "SPC k"))
+  :init
+  (setq evil-lisp-state-global t)
+  :config
+  (evil-lisp-state-leader "SPC k"))
 
 (use-package! lispy
   :hook ((lisp-mode . lispy-mode)
