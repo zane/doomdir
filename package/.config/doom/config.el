@@ -88,12 +88,15 @@
                   +theme-dark)))
     (load-theme theme t)))
 
-(after! (circadian gruvbox-theme)
-  (setq calendar-latitude +latitude)
-  (setq calendar-longitude +longitude)
-  (setq circadian-themes '((:sunset  . gruvbox-dark-medium)
-                           (:sunrise . gruvbox-light-medium)))
-  (circadian-setup))
+(use-package! circadian
+  :demand t
+  :config
+  (after! gruvbox-theme
+    (setq calendar-latitude +latitude)
+    (setq calendar-longitude +longitude)
+    (setq circadian-themes '((:sunset  . gruvbox-dark-medium)
+                             (:sunrise . gruvbox-light-medium)))
+    (circadian-setup)))
 
 ;;; Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
