@@ -141,3 +141,80 @@
           text-objects))
   :config
   (lispyville-set-key-theme))
+
+;;; Org
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; https://www.reddit.com/r/emacs/comments/iemo44/wysiwygified_org_mode/
+;; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
+
+(after! org
+  (setq-default org-adapt-indentation nil))
+
+(use-package! org-padding
+  :after org
+  :custom
+  (org-padding-block-begin-line-padding  '(2.0 . nil))
+  (org-padding-block-end-line-padding  '(nil . 1.0))
+  (org-padding-heading-padding-alist  '((4.0 . 1.5)
+                                        (3.0 . 0.5)
+                                        (3.0 . 0.5)
+                                        (3.0 . 0.5)
+                                        (2.5 . 0.5)
+                                        (2.0 . 0.5)
+                                        (1.5 . 0.5)
+                                        (0.5 . 0.5))))
+
+(use-package! mixed-pitch
+  :config
+  (pushnew! mixed-pitch-fixed-pitch-faces
+            'org-date
+            'org-special-keyword
+            'org-property-value
+            'org-ref-cite-face
+            'org-tag
+            'org-todo-keyword-todo
+            'org-todo-keyword-habt
+            'org-todo-keyword-done
+            'org-todo-keyword-wait
+            'org-todo-keyword-kill
+            'org-todo-keyword-outd
+            'org-todo
+            'org-done
+            'font-lock-comment-face
+            'line-number
+            'line-number-current-line))
+
+;;;###autoload
+(define-minor-mode +org-word-processor-mode
+  "Make org look like a word processor."
+  :init-value nil
+  :group 'evil-org
+  (require 'face-remap)
+  (require 'org-indent)
+  (cond (+org-word-processor-mode
+         (setq-local +org-word-processor--old-hl-line-mode (bound-and-true-p hl-line-mode))
+         (setq-local +org-word-processor--old-org-hide-emphasis-markers (bound-and-true-p org-hide-emphasis-markers))
+         (setq +org-word-processor--org-superstar-remove-leading-stars (bound-and-true-p org-superstar-remove-leading-stars))
+         (setq +org-word-processor--old-org-indent-mode (bound-and-true-p org-indent-mode)
+               +org-word-processor--old-org-superstar-mode (bound-and-true-p org-superstar-mode)
+               +org-word-processor--old-mixed-pitch-mode (bound-and-true-p mixed-pitch-mode))
+         (hl-line-mode -1)
+         (setq org-hide-emphasis-markers t)
+         (setq org-superstar-remove-leading-stars t)
+         (org-indent-mode -1)
+         (org-superstar-mode +1)
+         (mixed-pitch-mode +1))
+        (t
+         (hl-line-mode +org-word-processor--old-hl-line-mode)
+         (setq org-hide-emphasis-markers +org-word-processor--old-org-hide-emphasis-markers)
+         (setq org-superstar-remove-leading-stars +org-word-processor--org-superstar-remove-leading-stars)
+         (org-indent-mode (if +org-word-processor--old-org-indent-mode +1 -1))
+         (org-superstar-mode (if +org-word-processor--old-org-superstar-mode +1 -1))
+         (mixed-pitch-mode (if +org-word-processor--old-mixed-pitch-mode +1 -1)))))
+
+;; https://emacs.stackexchange.com/questions/54932/is-there-a-way-to-add-some-margin-padding-above-a-line
+;; https://github.com/volrath/treepy.el#main-differences-with-clojure-libraries
+;; http://www.dr-qubit.org/predictive/auto-overlay-manual/html/index.html#Top
+;;
+;; Maybe what we do here is walk `font-lock-keywords' looking for a font face and

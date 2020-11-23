@@ -12,6 +12,9 @@
 (package! gruvbox-theme)
 (package! lispy)
 (package! lispyville)
+(package! mixed-pitch)
+(package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding"))
+(package! org-superstar)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
