@@ -7,7 +7,6 @@
 
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
-(package! circadian)
 (package! evil-lisp-state)
 (package! gruvbox-theme)
 (package! lispy)

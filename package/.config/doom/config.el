@@ -73,30 +73,17 @@
 (defvar +theme-light 'gruvbox-light-medium)
 (defvar +theme-dark 'gruvbox-dark-medium)
 
-(defvar +default-sunrise-hour 5)
-(defvar +default-sunset-hour 17)
+(defun +apply-theme (appearance)
+  "Load theme, taking current system APPEARANCE into consideration."
+  (mapc #'disable-theme custom-enabled-themes)
+  (pcase appearance
+    ('light (load-theme +theme-light t))
+    ('dark (load-theme +theme-dark t))))
 
-(defvar +latitude 40.7)
-(defvar +longitude -73.9)
-
-(use-package! gruvbox-theme
-  :if window-system
-  :config
-  (let* ((hour (decoded-time-hour (decode-time (current-time))))
-         (theme (if (< +default-sunrise-hour hour +default-sunset-hour)
-                    +theme-light
-                  +theme-dark)))
-    (load-theme theme t)))
-
-(use-package! circadian
-  :demand t
-  :config
-  (after! gruvbox-theme
-    (setq calendar-latitude +latitude)
-    (setq calendar-longitude +longitude)
-    (setq circadian-themes '((:sunset  . gruvbox-dark-medium)
-                             (:sunrise . gruvbox-light-medium)))
-    (circadian-setup)))
+(when IS-MAC
+  ;; https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change
+  (add-hook 'ns-system-appearance-change-functions #'+apply-theme)
+  (+apply-theme ns-system-appearance))
 
 ;;; Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
