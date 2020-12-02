@@ -66,6 +66,14 @@
   (setq projectile-project-search-path '("~/projects"))
   (projectile-add-known-project "~/.dotfiles"))
 
+(use-package! atomic-chrome
+  :after-call handle-focus-out
+  :config
+  (map! :mode atomic-chrome-edit-mode :n "ZZ" 'atomic-chrome-close-current-buffer)
+  (setq atomic-chrome-default-major-mode 'markdown-mode)
+  (setq atomic-chrome-buffer-open-style 'frame)
+  (atomic-chrome-start-server))
+
 ;;; Appearance
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
