@@ -77,15 +77,20 @@
 ;;; Appearance
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar +theme-light 'gruvbox-light-medium)
-(defvar +theme-dark 'gruvbox-dark-medium)
+(defvar +theme-light 'doom-gruvbox-light)
+(defvar +theme-dark 'doom-gruvbox)
 
 (defun +apply-theme (appearance)
   "Load theme, taking current system APPEARANCE into consideration."
   (mapc #'disable-theme custom-enabled-themes)
   (pcase appearance
     ('light (load-theme +theme-light t))
-    ('dark (load-theme +theme-dark t))))
+    ('dark (load-theme +theme-dark t)))
+  ;; Not every theme defines a cursor color. This can cause problems when using
+  ;; a light theme because the default cursor color is `"#ffffff"'.
+  (let ((cursor-color (face-foreground 'default)))
+    (custom-set-faces! `(cursor :background ,cursor-color))
+    (setq +evil--default-cursor-color cursor-color)))
 
 (when IS-MAC
   ;; https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change
