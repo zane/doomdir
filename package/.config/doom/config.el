@@ -127,7 +127,10 @@
          (clojure-mode . lispy-mode))
   :config
   (lispy-set-key-theme '(evilcp))
+  (define-key lispy-mode-map (kbd ";") nil)
   (define-key lispy-mode-map (kbd "y") nil)
+  (define-key lispy-mode-map (kbd "<") nil)
+  (define-key lispy-mode-map (kbd ">") nil)
   (define-key lispy-mode-map (kbd "[") 'lispy-brackets)
   (define-key lispy-mode-map (kbd "]") 'lispy-right))
 
