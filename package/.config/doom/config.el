@@ -101,7 +101,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package! clojure
-  :mode ("\\.bb\\'" . clojure-mode))
+  :mode ("\\.bb\\'" . clojure-mode)
+  :config)
+
+(after! cider
+  (set-repl-handler! 'clojurec-mode #'+clojure/open-repl :persist t)
+  (set-eval-handler! 'clojurec-mode #'cider-eval-region))
 
 (use-package! evil-lisp-state
   :demand t
