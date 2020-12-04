@@ -84,17 +84,32 @@
 (defvar +theme-light 'doom-gruvbox-light)
 (defvar +theme-dark 'doom-gruvbox)
 
-(defun +apply-theme (appearance)
-  "Load theme, taking current system APPEARANCE into consideration."
-  (mapc #'disable-theme custom-enabled-themes)
-  (pcase appearance
-    ('light (load-theme +theme-light t))
-    ('dark (load-theme +theme-dark t)))
+(defun +soften-org-block-lines ()
+  "Change org-block faces to be faint text against the default background."
+  (interactive)
+  (let ((color  (doom-blend (face-foreground 'default)
+                            (face-background 'default)
+                            0.2)))
+    (custom-set-faces!
+      `(org-block-begin-line :foreground ,color :background nil)
+      `(org-block-end-line :foreground ,color :background nil))))
+
+(defun +fix-cursor-color ()
+  "Changes the cursor color to be the same color as the default foreground color."
   ;; Not every theme defines a cursor color. This can cause problems when using
   ;; a light theme because the default cursor color is `"#ffffff"'.
   (let ((cursor-color (face-foreground 'default)))
     (custom-set-faces! `(cursor :background ,cursor-color))
     (setq +evil--default-cursor-color cursor-color)))
+
+(defun +apply-theme (appearance)
+  "Load theme and enable our theme-agnostic tweaks, taking current system appearance into consideration."
+  (mapc #'disable-theme custom-enabled-themes)
+  (pcase appearance
+    ('light (load-theme +theme-light t))
+    ('dark (load-theme +theme-dark t)))
+  (+soften-org-block-lines)
+  (+fix-cursor-color))
 
 (when IS-MAC
   ;; https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change
