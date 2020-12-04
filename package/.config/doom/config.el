@@ -120,6 +120,14 @@
 (after! magit-todos
   (magit-todos-mode +1)) ; show todos and the like in magit by default
 
+(after! simple
+  ;; Navigate via visual line when `visual-line-mode' is enabled.
+  (map! :map visual-line-mode-map
+        :m "j" #'evil-next-visual-line
+        :m "k" #'evil-previous-visual-line
+        :m "<down>" #'evil-next-visual-line
+        :m "<up>" #'evil-previous-visual-line))
+
 ;;; Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
