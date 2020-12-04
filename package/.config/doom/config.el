@@ -116,6 +116,9 @@
   (add-hook 'ns-system-appearance-change-functions #'+apply-theme)
   (+apply-theme ns-system-appearance))
 
+(after! magit-todos
+  (magit-todos-mode +1)) ; show todos and the like in magit by default
+
 ;;; Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
