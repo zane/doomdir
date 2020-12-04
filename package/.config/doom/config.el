@@ -66,6 +66,10 @@
   (setq projectile-project-search-path '("~/projects"))
   (projectile-add-known-project "~/.dotfiles"))
 
+(use-package! aggressive-indent
+  :config
+  (aggressive-indent-mode))
+
 (use-package! atomic-chrome
   :after-call handle-focus-out
   :config

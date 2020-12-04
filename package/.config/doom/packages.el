@@ -7,6 +7,7 @@
 
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+(package! aggressive-indent)
 (package! atomic-chrome)
 (package! evil-lisp-state)
 (package! gruvbox-theme)
