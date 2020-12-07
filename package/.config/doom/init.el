@@ -32,7 +32,7 @@
        ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
        ;;(emoji +unicode)  ; 🙂
        ;;fill-column       ; a `fill-column' indicator
-       hl-todo             ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+       hl-todo             ; highlight todos
        ;;hydra
        ;;indent-guides     ; highlighted indent columns
        ;;ligatures         ; ligatures and symbols to make your code pretty again
@@ -85,7 +85,7 @@
 
        :tools
        ;;ansible
-       ;;debugger          ; FIXME stepping through code, to help you add bugs
+       ;;debugger          ; stepping through code, to help you add bugs
        direnv
        ;;docker
        ;;editorconfig      ; let someone else argue about tabs vs spaces
