@@ -57,6 +57,9 @@
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
+(after! files
+  (setq confirm-kill-processes nil)) ; don't ask
+
 (after! newcomment
   (setq comment-style 'plain))
 
