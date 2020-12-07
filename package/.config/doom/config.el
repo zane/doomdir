@@ -61,7 +61,8 @@
   (setq confirm-kill-processes nil)) ; don't ask
 
 (after! newcomment
-  (setq comment-style 'plain))
+  (setq comment-auto-fill-only-comments t)
+  (add-hook! prog-mode #'auto-fill-mode))
 
 (after! evil
   (setq evil-move-beyond-eol t))
