@@ -183,3 +183,20 @@
           text-objects))
   :config
   (lispyville-set-key-theme))
+
+;;; Org
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(after! mixed-pitch
+  (setq mixed-pitch-set-height t))
+
+(after! (:and org org-src)
+  ;; FIXME Get the "ZZ" keybinding working when editing org src blocks
+  (map! :mode org-src-mode :n "ZZ" 'org-edit-src-exit)) ; Have mixed-pitch use the font from `doom-variable-pitch-font'.
+
+(after! writeroom-mode
+  (setq +zen-text-scale 0))
+
+(use-package! prettify-org
+  :after org
+  :load-path "lisp")
