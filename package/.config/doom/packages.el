@@ -10,7 +10,6 @@
 (package! aggressive-indent)
 (package! atomic-chrome)
 (package! evil-lisp-state)
-(package! gruvbox-theme)
 (package! lispy)
 (package! lispyville)
 
