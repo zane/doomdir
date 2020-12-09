@@ -10,6 +10,7 @@
 (package! aggressive-indent)
 (package! atomic-chrome)
 (package! evil-lisp-state)
+(package! git-link)
 (package! lispy)
 (package! lispyville)
 
