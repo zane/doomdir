@@ -7,6 +7,7 @@
 
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+
 (package! aggressive-indent)
 (package! atomic-chrome)
 (package! evil-lisp-state)
@@ -29,9 +30,9 @@
 
 ;; If you'd like to disable a package included with Doom, you can do so here
 ;; with the `:disable' property:
-;(package! builtin-package :disable t)
 
 (package! clj-refactor :disable t)
+(package! org-superstar :disable t)
 
 ;; You can override the recipe of a built in package without having to specify
 ;; all the properties for `:recipe'. These will inherit the rest of its recipe
