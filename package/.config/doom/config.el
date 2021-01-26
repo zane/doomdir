@@ -87,6 +87,10 @@
   (setq atomic-chrome-buffer-open-style 'frame)
   (atomic-chrome-start-server))
 
+(after! flycheck
+  (map! :n "[e" 'flycheck-previous-error)
+  (map! :n "]e" 'flycheck-next-error))
+
 ;;; Appearance
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
