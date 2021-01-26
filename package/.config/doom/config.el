@@ -57,6 +57,9 @@
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
+(after! core-ui
+  (setq global-hl-line-modes (delete 'text-mode global-hl-line-modes)))
+
 (after! files
   (setq confirm-kill-processes nil)) ; don't ask
 
