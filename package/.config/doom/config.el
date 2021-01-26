@@ -175,6 +175,7 @@
   (define-key lispy-mode-map (kbd "y") nil)
   (define-key lispy-mode-map (kbd "<") nil)
   (define-key lispy-mode-map (kbd ">") nil)
+  (define-key lispy-mode-map (kbd "C-a") nil)
   (define-key lispy-mode-map (kbd "[") 'lispy-brackets)
   (define-key lispy-mode-map (kbd "]") 'lispy-right)
   (define-key lispy-mode-map (kbd "}") 'lispy-right))
