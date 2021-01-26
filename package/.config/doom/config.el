@@ -236,3 +236,11 @@ into the REPL buffer, even if it is open."
 (use-package! prettify-org
   :after org
   :load-path "lisp")
+
+(use-package! org-margin-stars
+  :after org
+  :load-path "lisp")
+
+(use-package! org-headline-space
+  :after org
+  :load-path "lisp")
