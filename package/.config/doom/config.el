@@ -135,6 +135,7 @@
 (after! simple
   ;; Navigate via visual line when `visual-line-mode' is enabled.
   (map! :map visual-line-mode-map
+        :m "$" #'evil-end-of-visual-line
         :m "j" #'evil-next-visual-line
         :m "k" #'evil-previous-visual-line
         :m "<down>" #'evil-next-visual-line
