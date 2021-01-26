@@ -218,8 +218,16 @@ into the REPL buffer, even if it is open."
 (after! mixed-pitch
   (setq mixed-pitch-set-height nil))
 
+(defun +hide-line-numbers ()
+  "Hide line numbers."
+  (setq display-line-numbers nil))
+
+(after! org
+  (setq org-adapt-indentation nil)
+  (setq org-hide-leading-stars nil)
+  (add-hook! org-mode #'+hide-line-numbers))
+
 (after! (:and org org-src)
-  ;; FIXME Get the "ZZ" keybinding working when editing org src blocks
   (map! :mode org-src-mode :n "ZZ" 'org-edit-src-exit)) ; Have mixed-pitch use the font from `doom-variable-pitch-font'.
 
 (after! writeroom-mode
