@@ -68,7 +68,8 @@
   (add-hook! prog-mode #'auto-fill-mode))
 
 (after! evil
-  (setq evil-move-beyond-eol t))
+  (setq evil-move-beyond-eol nil)
+  (setq evil-respect-visual-line-mode t))
 
 (after! projectile
   (setq projectile-project-search-path '("~/projects"))
