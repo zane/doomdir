@@ -1,0 +1,174 @@
+#+TITLE: doomdir notes
+
+* Inspiration
+- https://github.com/rougier/elegant-emacs
+- https://github.com/sabof/magic-buffer
+* Enhancements
+** DONE Show =TODO= and other such things in magit by default
+** TODO Get commented lines to be indented with one space between comment character and form
+** TODO Library for hiding parts of the buffer when the cursor is not nearby
+- https://www.reddit.com/r/orgmode/comments/gss1g4/update_i_made_my_own_sbrorgemphasizemode_that/
+- https://emacsredux.com/blog/2014/08/25/a-peek-at-emacs-24-dot-4-prettify-symbols-mode/
+- [[https://git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/prog-mode.el?h=emacs-27#n199][source of =prettify-symbols-mode=]]
+
+*** Display table
++It seems like we /might/ be able to do this via the variable =buffer-display-table=?+
+
+Nope. This doesn't work.
+
+#+begin_quote
+In addition, a char-table has six extra slots to control the display of:
+
+  the end of a truncated screen line (extra-slot 0, a single character);
+  the end of a continued line (extra-slot 1, a single character);
+  the escape character used to display character codes in octal
+    (extra-slot 2, a single character);
+  the character used as an arrow for control characters (extra-slot 3,
+    a single character);
+  the decoration indicating the presence of invisible lines (extra-slot 4,
+    a vector of characters);
+  the character used to draw the border between side-by-side windows
+    (extra-slot 5, a single character).
+#+end_quote
+
+#+begin_src elisp
+(display-table-slot buffer-display-table 'selective-display)
+#+end_src
+*** Invisible text
+Emacs has a section on
+
+** TODO org-mode
+*** DONE Use sans serif font for headlines
+Here's how alphapapa [[https://github.com/alphapapa/org-sticky-header/issues/10#issuecomment-352464944][iterates over the headlines]].
+
+ #+begin_src elisp
+(defvar variable-pitch-sans-font (font-spec :family "Cooper Hewitt" :size 18))
+
+(defface variable-pitch-sans
+  `((t (:font ,variable-pitch-sans-font)))
+  "Face for variable pitch sans-serf text.")
+
+(defvar-local +sans-serif-headlines-cookie nil)
+
+(defvar +sans-serif-headlines-faces
+  '(org-level-1
+    org-level-2
+    org-level-3
+    org-level-4
+    org-level-5
+    org-level-6
+    org-level-7
+    org-level-8))
+
+(define-minor-mode +sans-serif-headlines
+  "When enabled uses a serif font for org-mode headlines."
+  :init-value nil
+  (progn
+    (when +sans-serif-headlines
+      (setq +sans-serif-headlines-cookie nil)
+      (dolist (face +sans-serif-headlines-faces)
+        (add-to-list '+sans-serif-headlines-cookie
+                     (apply #'face-remap-add-relative face nil (font-face-attributes variable-pitch-sans-font)))))
+    (unless +sans-serif-headlines
+      (dolist (cookie +sans-serif-headlines-cookie)
+        (face-remap-remove-relative cookie))
+      (setq +sans-serif-headlines-cookie nil))))
+ #+end_src
+
+*** DONE Pretty todos and checkboxes
+- https://jft.home.blog/2019/07/17/use-unicode-symbol-to-display-org-mode-checkboxes/
+
+- [ ] Ballot box
+- [X] Ballot box with check
+- [-] Ballot box with x
+
+#+begin_src elisp
+(defvar +pretty-checkbox-symbols
+  '(("[ ]" . ?\u2610) ; ballot box
+    ("[X]" . ?\u2611) ; ballot box with check
+  sdkflaskdjf  ("[-]" . ?\u2612))) ; ballot box with x
+
+(dolist (item +pretty-checkbox-symbols)
+  (add-to-list 'prettify-symbols-alist item))
+
+(defvar +pretty-todo-keywords-symbols
+  '(("TODO" . ?\u2610) ; ballot box
+    ("DONE" . ?\u2611))) ; ballot box with check
+
+(dolist (item +pretty-todo-keywords-symbols)
+  (add-to-list 'prettify-symbols-alist item))
+
+(set-face-attribute 'org-todo nil :foreground nil)
+(set-face-attribute 'org-done nil :foreground nil)
+
+(setq prettify-symbols-unprettify-at-point t)
+
+(prettify-symbols-mode)
+#+end_src
+
+*** TODO Margins and padding
+- https://github.com/TonCherAmi/org-padding
+- https://lists.gnu.org/archive/html/emacs-devel/2002-01/msg00573.html
+- https://emacs.stackexchange.com/questions/54932/is-there-a-way-to-add-some-margin-padding-above-a-line
+*** TODO Cuter org-elipsis
+- https://endlessparentheses.com/changing-the-org-mode-ellipsis.html
+
+The following works, but the resulting character is a strange color.
+
+#+begin_src elisp
+(setq org-ellipsis " \u2026")
+#+end_src
+
+Still trying to figure out how to get it to be the same color as the headline. See [[https://emacs.stackexchange.com/questions/17806/set-face-of-outline-ellipsis][this StackOverflow answer]] for more information. It seems like it's using the =buffer-display-table=, which does not support modifying the face of the character that is inserted, but if that's the case then why is the default ellipsis the same color as the headline? More to investigate here.
+
+*** TODO Display links in fixed-width face
+*** TODO Use more subtle styling
+**** DONE Links
+Links use the =org-link= face, which inherits from the =link= face.
+#+begin_src elisp
+(set-face-attribute 'link nil :foreground nil)
+(set-face-attribute 'link nil :weight 'normal)
+#+end_src
+*** TODO Hide leading stars entirely
+- https://github.com/TonCherAmi/org-starless
+
+It would be nice, particularly in =variable-pitch-mode=, to hide all of the leading stars.
+
+Probably what we want to do is iterate over =org-font-lock-keywords= and add display properties.
+
+#+begin_src elisp
+(define-minor-mode org-starless-mode
+  "Starless org-mode"
+  nil nil nil
+  :require 'org
+  (let ((keywords
+         `(("^\\(\\*+ \\)\\s-*\\S-" ; Do not hide empty headings!
+            (1 (put-text-property (match-beginning 1) (match-end 1) 'invisible t)
+               nil)))))
+    (if org-starless-mode
+        (progn
+          (font-lock-add-keywords nil keywords)
+          (font-lock-ensure)
+          (font-lock-flush))
+      (save-excursion
+        (goto-char (point-min))
+        (font-lock-remove-keywords nil keywords)
+        (font-lock-ensure)
+        (font-lock-flush)))))
+#+end_src
+
+**** Inspiration
+=org-mode= itself has =org-hide-leading-stars=. =org-superstar= has =org-superstar-remove-leading-stars=. The former is like =visibility: hidden=. The latter is like =visibility: none=. Neither of these hide the non-leading stars.
+
+#+begin_src elisp
+(setq org-superstar-remove-leading-stars t)
+#+end_src
+
+Using a zero-width space is pretty janky because you can actually move the cursor over the zero-width space causing the cursor to disappear.
+
+#+begin_src elisp
+(setq org-superstar-headline-bullets-list '(?\u200B))
+#+end_src
+
+*** TODO Use height to indicate header level
+If we hide the leading stars we'll need to find some other way of signifying that a particular line is a header.
