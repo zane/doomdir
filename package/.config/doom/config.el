@@ -195,6 +195,23 @@
   :config
   (lispyville-set-key-theme))
 
+;;; Eval
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Override `+eval/region' so that it doesn't insert evaluated text into the
+;; REPL buffer even if the REPL buffer is open.
+
+(defun +simple-eval/region (beg end)
+  "Evaluate a region between BEG and END and display the output. Do not insert
+into the REPL buffer, even if it is open."
+  (interactive "r")
+  (let ((load-file-name buffer-file-name))
+    (if-let (runner (alist-get major-mode +eval-runners))
+        (funcall runner beg end)
+      (quickrun-region beg end))))
+
+(advice-add '+eval/region :override #'+simple-eval/region)
+
 ;;; Org
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
