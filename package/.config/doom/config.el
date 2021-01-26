@@ -199,7 +199,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (after! mixed-pitch
-  (setq mixed-pitch-set-height t))
+  (setq mixed-pitch-set-height nil))
 
 (after! (:and org org-src)
   ;; FIXME Get the "ZZ" keybinding working when editing org src blocks
