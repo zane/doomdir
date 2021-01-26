@@ -10,6 +10,13 @@
 ;;; text decorations if the point is near (Or inside? This part needs to be
 ;;; fleshed out a bit) the affected region.
 
+;;; FIXME If memory serves, the above approach isn't going to work. I'm better
+;;; off following the approach used by `pretty-mode', or by configuring
+;;; `pretty-mode' (or the built-in `prettify-symbols-mode') itself.
+
+;;; Update: Deeeefinitely don't want to use the above. Probably want to use
+;;; the text decoration / overlay hooks.
+
 (defun prettify-org--make-keywords ()
   nil)
 
@@ -29,6 +36,10 @@
 
   (unless prettify-org-mode
     (message "off")))
+
+;; TODO https://www.reddit.com/r/emacs/comments/kmjkoi/n%CE%BBno_writer_mode/
+;; TODO https://www.reddit.com/r/orgmode/comments/j6hlo3/how_to_get_better_org_indentation/
+;; TODO https://github.com/emacsorphanage/ov
 
 (provide 'prettify-org)
 

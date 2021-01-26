@@ -24,10 +24,11 @@
       (let* ((overlay (ov-line (org-element-property :begin element))))
         ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Other-Display-Specs.html#Other-Display-Specs
         (ov-set overlay
-                'before-string (propertize " "
-                                           'display '(space . (:width 0
-                                                               :relative-height 4
-                                                               :ascent 100))))
+                'before-string (concat (propertize " "
+                                                   'display '(space . (:width 0
+                                                                       :relative-height 2
+                                                                       :ascent 100)))
+                                       "\n"))
         (setq +org-headline-space--overlays (cons overlay +org-headline-space--overlays))))))
 
 (define-minor-mode +org-headline-space-mode
