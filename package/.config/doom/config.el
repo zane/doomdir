@@ -77,8 +77,9 @@
   (add-hook! 'evil-insert-state-entry-hook #'redisplay))
 
 (after! projectile
-  (setq projectile-project-search-path '("~/projects"))
-  (projectile-add-known-project "~/.dotfiles"))
+  (let ((projects-dir "~/projects"))
+    (when (file-directory-p projects-dir)
+      (setq projectile-project-search-path (list projects-dir)))))
 
 (use-package! aggressive-indent
   :config
