@@ -69,7 +69,12 @@
 
 (after! evil
   (setq evil-move-beyond-eol nil)
-  (setq evil-respect-visual-line-mode t))
+  (setq evil-respect-visual-line-mode t)
+  ;; This is to work around a bug. Without the following line when changing from
+  ;; normal mode into insert mode the cursor is changed from bar to line, but
+  ;; the bar is still visible. This gives the appearance that Emacs is still in
+  ;; normal mode.
+  (add-hook! 'evil-insert-state-entry-hook #'redisplay))
 
 (after! projectile
   (setq projectile-project-search-path '("~/projects"))
