@@ -131,9 +131,12 @@
   (+fix-cursor-color))
 
 (when IS-MAC
-  ;; https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change
-  (add-hook 'ns-system-appearance-change-functions #'+apply-theme)
-  (+apply-theme ns-system-appearance))
+  (if (boundp 'ns-system-appearance)
+      (progn
+        ;; https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change
+        (add-hook! 'ns-system-appearance-change-functions #'+apply-theme)
+        (+apply-theme ns-system-appearance))
+    (+apply-theme 'dark)))
 
 (after! magit-todos
   (magit-todos-mode +1)) ; show todos and the like in magit by default
