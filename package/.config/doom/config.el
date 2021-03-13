@@ -165,6 +165,27 @@
         :m "<down>" #'evil-next-visual-line
         :m "<up>" #'evil-previous-visual-line))
 
+;;; LSP
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(after! eglot
+  (add-to-list 'eglot-server-programs '((clojure-mode clojurec-mode clojurescript-mode) . ("bash" "-c" "clojure-lsp"))))
+
+(after! lsp-ui
+  ;; https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
+  (setq lsp-enable-symbol-highlighting nil)
+  (setq lsp-log-io t)
+  (setq lsp-ui-sideline-enable nil))
+
+;;; Python
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun +fill-column-to-79 ()
+  (set-fill-column 79))
+
+(after! python
+  (add-hook! python-mode #'+fill-column-to-79))
+
 ;;; Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
