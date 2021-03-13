@@ -133,13 +133,25 @@
   (+soften-org-block-lines)
   (+fix-cursor-color))
 
-(when IS-MAC
-  (if (boundp 'ns-system-appearance)
+(defun +sync-theme ()
+  (interactive)
+  (when IS-MAC
+    (cond
+     ;; emacs-plus
+     ((boundp 'ns-system-appearance)
       (progn
         ;; https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change
-        (add-hook! 'ns-system-appearance-change-functions #'+apply-theme)
-        (+apply-theme ns-system-appearance))
-    (+apply-theme 'dark)))
+        (add-hook! 'ns-system-appearance-change-functions #'+apply-theme)))
+
+     ;; emacs-mac
+     ((fboundp 'mac-application-state)
+      (let ((appearance (pcase (plist-get (mac-application-state) :appearance)
+                          ("NSAppearanceNameAqua" 'light)
+                          ("NSAppearanceNameDarkAqua" 'dark))))
+        (+apply-theme appearance)))
+     (+apply-theme 'dark))))
+
+(+sync-theme)
 
 (after! magit-todos
   (magit-todos-mode +1)) ; show todos and the like in magit by default
