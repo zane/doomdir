@@ -193,6 +193,7 @@
   :mode ("\\.bb\\'" . clojure-mode))
 
 (after! cider
+  (set-popup-rule! '(("^\\*cider-repl" :quit nil :ttl nil)))
   (set-repl-handler! 'clojurec-mode #'+clojure/open-repl :persist t)
   (set-eval-handler! 'clojurec-mode #'cider-eval-region))
 
