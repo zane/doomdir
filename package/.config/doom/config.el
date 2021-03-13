@@ -190,8 +190,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package! clojure
-  :mode ("\\.bb\\'" . clojure-mode)
-  :config)
+  :mode ("\\.bb\\'" . clojure-mode))
 
 (after! cider
   (set-repl-handler! 'clojurec-mode #'+clojure/open-repl :persist t)
