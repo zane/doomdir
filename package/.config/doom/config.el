@@ -289,3 +289,7 @@ into the REPL buffer, even if it is open."
 (use-package! org-headline-space
   :after org
   :load-path "lisp")
+
+(after! org-tree-slide
+  (setq org-tree-slide-fold-subtrees-skipped nil)
+  (setq org-tree-slide-skip-outline-level 0))
