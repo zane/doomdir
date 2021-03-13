@@ -229,13 +229,10 @@
   :hook (lispy-mode . lispyville-mode)
   :init
   (setq lispyville-key-theme
-        '((atom-movement normal visual)
-          c-u
+        '(c-u
           c-w
           commentary
-          (operators normal)
-          (prettify insert)
-          text-objects))
+          operators))
   :config
   (lispyville-set-key-theme))
 
