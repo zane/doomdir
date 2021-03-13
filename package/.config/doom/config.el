@@ -97,6 +97,9 @@
   (map! :n "[e" 'flycheck-previous-error)
   (map! :n "]e" 'flycheck-next-error))
 
+(after! ranger
+  (setq ranger-show-hidden t))
+
 ;;; Appearance
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
