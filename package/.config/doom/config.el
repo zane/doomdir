@@ -165,6 +165,12 @@
         :m "<down>" #'evil-next-visual-line
         :m "<up>" #'evil-previous-visual-line))
 
+;;; Editor
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(after! format-all
+  (add-hook 'python-mode-hook #'format-all-mode))
+
 ;;; LSP
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
