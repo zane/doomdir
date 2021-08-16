@@ -29,7 +29,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/Dropbox/org/")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -55,6 +55,12 @@
 ;;; Basic
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun doom/ediff-init-and-example ()
+  "ediff the current `init.el' with the example in doom-emacs-dir"
+  (interactive)
+  (ediff-files (concat doom-private-dir "init.el")
+               (concat doom-emacs-dir "init.example.el")))
+
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 (after! core-ui
@@ -77,6 +83,7 @@
   (add-hook! 'evil-insert-state-entry-hook #'redisplay))
 
 (after! projectile
+  (setq projectile-indexing-method 'alien)
   (let ((projects-dir "~/projects"))
     (when (file-directory-p projects-dir)
       (setq projectile-project-search-path (list projects-dir)))))
@@ -106,7 +113,7 @@
 (defvar +theme-light 'doom-gruvbox-light)
 (defvar +theme-dark 'doom-gruvbox)
 
-(defun +soften-org-block-lines ()
+(defun z/soften-org-block-lines ()
   "Change org-block faces to be faint text against the default background."
   (interactive)
   (let ((color  (doom-blend (face-foreground 'default)
@@ -116,24 +123,21 @@
       `(org-block-begin-line :foreground ,color :background nil)
       `(org-block-end-line :foreground ,color :background nil))))
 
-(defun +fix-cursor-color ()
-  "Changes the cursor color to be the same color as the default foreground color."
-  ;; Not every theme defines a cursor color. This can cause problems when using
-  ;; a light theme because the default cursor color is `"#ffffff"'.
-  (let ((cursor-color (face-foreground 'default)))
-    (custom-set-faces! `(cursor :background ,cursor-color))
-    (setq +evil--default-cursor-color cursor-color)))
+(after! evil
+  (defun z/default-cursor-fn ()
+    (evil-set-cursor-color (face-foreground 'font-lock-keyword-face)))
+  (setq evil-default-cursor 'z/default-cursor-fn))
 
-(defun +apply-theme (appearance)
-  "Load theme and enable our theme-agnostic tweaks, taking current system appearance into consideration."
+(defun z/apply-theme (appearance)
+  "Load theme and enable our theme-agnostic tweaks, taking current system
+appearance into consideration."
   (mapc #'disable-theme custom-enabled-themes)
   (pcase appearance
     ('light (load-theme +theme-light t))
     ('dark (load-theme +theme-dark t)))
-  (+soften-org-block-lines)
-  (+fix-cursor-color))
+  (z/soften-org-block-lines))
 
-(defun +sync-theme ()
+(defun z/sync-theme ()
   (interactive)
   (when IS-MAC
     (cond
@@ -141,17 +145,36 @@
      ((boundp 'ns-system-appearance)
       (progn
         ;; https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change
-        (add-hook! 'ns-system-appearance-change-functions #'+apply-theme)))
+        (add-hook! 'ns-system-appearance-change-functions #'z/apply-theme)))
 
      ;; emacs-mac
      ((fboundp 'mac-application-state)
       (let ((appearance (pcase (plist-get (mac-application-state) :appearance)
                           ("NSAppearanceNameAqua" 'light)
                           ("NSAppearanceNameDarkAqua" 'dark))))
-        (+apply-theme appearance)))
-     (+apply-theme 'dark))))
+        (z/apply-theme appearance)))
+     (z/apply-theme 'dark))))
 
-(+sync-theme)
+(after! writeroom-mode
+  (setq writeroom-global-effects nil)
+  (setq writeroom-maximize-window nil))
+
+;;; JavaScript
+
+(defun z/set-js-mode-indent-width ()
+  (setq js-expr-indent-offset -2)
+  (doom/set-indent-width 2))
+
+(after! js
+  (setq js-expr-indent-offset -2)
+  (setq js-chain-indent nil))
+
+(add-hook! js-mode #'z/set-js-mode-indent-width)
+
+(z/sync-theme)
+
+(after! magit
+  (setq magit-branch-prefer-remote-upstream t))
 
 (after! magit-todos
   (magit-todos-mode +1)) ; show todos and the like in magit by default
@@ -165,6 +188,17 @@
         :m "<down>" #'evil-next-visual-line
         :m "<up>" #'evil-previous-visual-line))
 
+;;; Calendar
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun z/open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:ical-create-source "zaneshelby@gmail.com" "https://calendar.google.com/calendar/ical/zaneshelby%40gmail.com/private-55dd7bd22292ba60b84f40f441900bdb/basic.ics" ;; (face-foreground 'default)
+                            ))))
+
 ;;; Editor
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -173,9 +207,6 @@
 
 ;;; LSP
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(after! eglot
-  (add-to-list 'eglot-server-programs '((clojure-mode clojurec-mode clojurescript-mode) . ("bash" "-c" "clojure-lsp"))))
 
 (after! lsp-ui
   ;; https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
@@ -192,16 +223,66 @@
 (after! python
   (add-hook! python-mode #'+fill-column-to-79))
 
+;;; HTML
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package web-mode
+  :custom
+  (web-mode-attr-indent-offset nil)
+  (web-mode-attr-value-indent-offset nil)
+  (web-mode-block-padding 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-script-padding 2)
+  (web-mode-style-padding 2))
+
 ;;; Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package! clojure
   :mode ("\\.bb\\'" . clojure-mode))
 
+(after! files
+  (put 'cider-clojure-cli-global-options 'safe-local-variable #'stringp))
+
+(after! clojure-mode
+  (put-clojure-indent 'prop/for-all 1)
+  (put-clojure-indent 'thrown? 1)
+  (put-clojure-indent 'comment -3))
+
+(defun string-nil-or-empty-p (s)
+  (or (not s)
+      (string= "" s)))
+
+(defun +zane/disable-dynapath (params)
+  (setq cider-clojure-cli-global-options
+        (concat cider-clojure-cli-global-options
+                (unless (string-nil-or-empty-p cider-clojure-cli-global-options)
+                  " ")
+                "-J-Dorchard.use-dynapath=false")))
+
 (after! cider
   (set-popup-rule! "^\\*cider-repl" :quit nil :ttl nil)
   (set-repl-handler! 'clojurec-mode #'+clojure/open-repl :persist t)
-  (set-eval-handler! 'clojurec-mode #'cider-eval-region))
+  (set-eval-handler! 'clojurec-mode #'cider-eval-region)
+  ;; https://github.com/clojure-emacs/orchard/pull/112
+  (advice-add 'cider-jack-in-clj :before #'+zane/disable-dynapath))
+
+(add-hook! clojurec-mode #'cider-mode)
+
+(after! (evil smartparens)
+  (evil-define-text-object +zane:inner-sp-sexp-texobj (count &optional beg end type)
+    (evil-range
+     (save-excursion
+       (sp-forward-sexp)
+       (point))
+     (save-excursion
+       (sp-forward-sexp)
+       (sp-backward-sexp)
+       (point))
+     type))
+  (map! :textobj "x" #'+zane:inner-sp-sexp-texobj #'+zane:inner-sp-sexp-texobj))
 
 (use-package! evil-lisp-state
   :demand t
@@ -285,7 +366,16 @@ into the REPL buffer, even if it is open."
   :after org
   :load-path "lisp")
 
+(use-package! org-roam
+  :after org
+  :config
+  (setq org-roam-directory (file-truename "~/Dropbox/org/roam/")))
+
 (use-package! org-margin-stars
+  :after org
+  :load-path "lisp")
+
+(use-package! org-header-heights
   :after org
   :load-path "lisp")
 

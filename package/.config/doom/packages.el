@@ -15,7 +15,10 @@
 (package! git-link)
 (package! lispy)
 (package! lispyville)
+(unpin! org-roam)
+(package! org-roam)
 (package! ov)
+(package! writeroom-mode)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:

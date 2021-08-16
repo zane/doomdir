@@ -5,22 +5,22 @@
 ;; https://github.com/alphapapa/org-sticky-header/issues/10#issuecomment-352464944
 ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Faces.html
 
-(defface org-level-1-text '((t :height 2.4 :inherit org-level-1))
+(defface org-level-1-text '((t :height 2.0 :inherit org-level-1))
   "")
 
-(defface org-level-2-text '((t :height 2.2 :inherit org-level-2))
+(defface org-level-2-text '((t :height 1.8 :inherit org-level-2))
   "")
 
-(defface org-level-3-text '((t :height 2.0 :inherit org-level-3))
+(defface org-level-3-text '((t :height 1.6 :inherit org-level-3))
   "")
 
-(defface org-level-4-text '((t :height 1.8 :inherit org-level-4))
+(defface org-level-4-text '((t :height 1.4 :inherit org-level-4))
   "")
 
-(defface org-level-5-text '((t :height 1.4 :inherit org-level-5))
+(defface org-level-5-text '((t :height 1.2 :inherit org-level-5))
   "")
 
-(defface org-level-6-text '((t :height 1.2 :inherit org-level-6))
+(defface org-level-6-text '((t :height 1.0 :inherit org-level-6))
   "")
 
 (defface org-level-7-text '((t :height 1.0 :inherit org-level-7))
