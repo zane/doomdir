@@ -52,6 +52,11 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+;;; Temporary workarounds (Hopefully)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq iedit-toggle-key-default nil) ; https://github.com/hlissner/doom-emacs/issues/5374
+
 ;;; Basic
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -84,9 +89,12 @@
 
 (after! projectile
   (setq projectile-indexing-method 'alien)
-  (let ((projects-dir "~/projects"))
+  (let ((projects-dir (expand-file-name "~/projects")))
     (when (file-directory-p projects-dir)
-      (setq projectile-project-search-path (list projects-dir)))))
+      (setq projectile-project-search-path (list projects-dir))))
+  (let ((chezmoi-dir (expand-file-name "~/.local/share/chezmoi")))
+    (when (file-directory-p chezmoi-dir)
+      (projectile-add-known-project chezmoi-dir))))
 
 (use-package! aggressive-indent
   :config
@@ -104,8 +112,14 @@
   (map! :n "[e" 'flycheck-previous-error)
   (map! :n "]e" 'flycheck-next-error))
 
+(after! ispell
+  (setq ispell-personal-dictionary "/Users/zane/.aspell.en.pws"))
+
 (after! ranger
   (setq ranger-show-hidden t))
+
+(after! unicode-fonts
+  (add-to-list 'unicode-fonts-skip-fonts "Monaco"))
 
 ;;; Appearance
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -121,7 +135,8 @@
                             0.2)))
     (custom-set-faces!
       `(org-block-begin-line :foreground ,color :background nil)
-      `(org-block-end-line :foreground ,color :background nil))))
+      `(org-block-end-line :foreground ,color :background nil)
+      `(org-drawer :foreground ,color :background nil))))
 
 (after! evil
   (defun z/default-cursor-fn ()
@@ -154,6 +169,11 @@ appearance into consideration."
                           ("NSAppearanceNameDarkAqua" 'dark))))
         (z/apply-theme appearance)))
      (z/apply-theme 'dark))))
+
+(after! emojify
+  (setq emojify-display-style 'unicode)
+  (setq emojify-point-entered-behaviour 'uncover)
+  (add-to-list 'face-font-rescale-alist '("Apple Color Emoji" . 0.75)))
 
 (after! writeroom-mode
   (setq writeroom-global-effects nil)
@@ -248,6 +268,8 @@ appearance into consideration."
 
 (after! clojure-mode
   (put-clojure-indent 'prop/for-all 1)
+  (put-clojure-indent 'match/match 1)
+  (put-clojure-indent 'meander/match 1)
   (put-clojure-indent 'thrown? 1)
   (put-clojure-indent 'comment -3))
 
@@ -344,36 +366,62 @@ into the REPL buffer, even if it is open."
 ;;; Org
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(after! mixed-pitch
-  (setq mixed-pitch-set-height nil))
-
 (defun +hide-line-numbers ()
   "Hide line numbers."
   (setq display-line-numbers nil))
 
+(after! better-jumper
+  (after! org
+    (advice-add 'org-open-at-point :before #'better-jumper-set-jump)))
+
+(after! mixed-pitch
+  ;; Have mixed-pitch use the font from `doom-variable-pitch-font'.
+  (pushnew! mixed-pitch-fixed-pitch-faces
+            'font-lock-comment-face
+            'org-date
+            'org-done
+            'org-footnote
+            'org-hide
+            'org-indent
+            'org-level-0
+            'org-level-1
+            'org-level-2
+            'org-level-3
+            'org-level-4
+            'org-level-6
+            'org-level-7
+            'org-level-8
+            'org-level-9
+            'org-property-value
+            'org-ref-cite-face
+            'org-special-keyword
+            'org-tag
+            'org-todo
+            'org-todo-keyword-done
+            'org-todo-keyword-habt
+            'org-todo-keyword-kill
+            'org-todo-keyword-outd
+            'org-todo-keyword-todo
+            'org-todo-keyword-wait))
+
 (after! org
   (setq org-adapt-indentation nil)
+  (setq org-hide-emphasis-markers t)
   (setq org-hide-leading-stars nil)
-  (add-hook! org-mode #'+hide-line-numbers))
+  (add-hook! org-mode #'+hide-line-numbers)
+  (custom-set-faces! '(link :foreground unspecified :background unspecified :weight unspecified :underline t))
+  (custom-set-faces! '(org-document-title :foreground unspecified :weight bold))
+  (custom-set-faces! '(org-link :foreground unspecified :background unspecified :inherit link)))
 
-(after! (:and org org-src)
-  (map! :mode org-src-mode :n "ZZ" 'org-edit-src-exit)) ; Have mixed-pitch use the font from `doom-variable-pitch-font'.
-
-(after! writeroom-mode
-  (setq +zen-text-scale 0))
-
-(use-package! prettify-org
+(use-package! org-appear
   :after org
-  :load-path "lisp")
-
-(use-package! org-roam
-  :after org
+  :hook (org-mode . org-appear-mode)
   :config
-  (setq org-roam-directory (file-truename "~/Dropbox/org/roam/")))
-
-(use-package! org-margin-stars
-  :after org
-  :load-path "lisp")
+  (setq org-appear-autolinks t)
+  (setq org-appear-autosubmarkers t)
+  (setq org-appear-autoentities t)
+  (setq org-appear-autokeywords t)
+  (setq org-appear-delay 1.0))
 
 (use-package! org-header-heights
   :after org
@@ -383,6 +431,43 @@ into the REPL buffer, even if it is open."
   :after org
   :load-path "lisp")
 
+(use-package! org-margin-stars
+  :after org
+  :load-path "lisp")
+
+(defun azr/org-refile ()
+  "Like org-refile but converts links to titles."
+  (interactive)
+  (let ((targets (org-refile-get-targets)))
+    (cl-letf (((symbol-function 'org-refile-get-targets)
+               (lambda (&rest args)
+                 (mapcar (lambda (list)
+                           (let* ((regex "\\[\\[.*\\]\\[\\(.*\\)\\]\\]")
+                                  (string (car list))
+                                  (replacement (replace-regexp-in-string regex "\\1" string)))
+                             (cons replacement (cdr list))))
+                         targets))))
+      (org-refile))))
+
+(use-package! org-roam
+  :after org
+  :config
+  (setq org-roam-directory (file-truename "~/Dropbox/org/roam/"))
+  (setq +org-roam-open-buffer-on-find-file nil)
+  (map! :mode org-capture-mode :n "ZZ" 'org-capture-finalize))
+
 (after! org-tree-slide
   (setq org-tree-slide-fold-subtrees-skipped nil)
   (setq org-tree-slide-skip-outline-level 0))
+
+(after! (:and org org-src)
+  (map! :mode org-src-mode :n "ZZ" 'org-edit-src-exit))
+
+(use-package! prettify-org
+  :after org
+  :load-path "lisp")
+
+(use-package! writeroom-mode
+  :after org
+  :hook ((markdown-mode . writeroom-mode)
+         (org-mode . writeroom-mode)))
